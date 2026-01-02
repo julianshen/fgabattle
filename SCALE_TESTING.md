@@ -2,6 +2,17 @@
 
 This guide explains how to perform scale testing with OpenFGA using the generated tuple datasets at different scales.
 
+## Quick Start
+
+**First time setup**: Generate test data before running tests:
+
+```bash
+# Run the setup script to generate all datasets
+./scripts/setup-test-data.sh
+```
+
+This will create tuple files in `tuples/aws-iam-style/scale/` at four different scales.
+
 ## Dataset Scales
 
 We provide four different scale datasets for comprehensive performance testing:

@@ -2,6 +2,23 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Quick Start for New Users
+
+1. **Clone and setup**:
+```bash
+git clone <repo-url>
+cd fgabattle
+./scripts/setup-test-data.sh  # Generate test data
+```
+
+2. **Start OpenFGA**:
+```bash
+cd docker/openfga
+docker-compose up -d
+```
+
+3. **Run tests** (see SCALE_TESTING.md for details)
+
 ## Project Overview
 
 FGABattle is a comprehensive testing suite for OpenFGA (https://openfga.dev/) and compatible implementations. The project includes:

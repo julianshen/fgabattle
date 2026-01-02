@@ -1,0 +1,31 @@
+{
+  "writes": {
+    "tuple_keys": [
+      {
+        "user": "user:alice",
+        "relation": "owner",
+        "object": "document:planning-doc"
+      },
+      {
+        "user": "user:bob",
+        "relation": "editor",
+        "object": "document:planning-doc"
+      },
+      {
+        "user": "user:charlie",
+        "relation": "viewer",
+        "object": "document:planning-doc"
+      },
+      {
+        "user": "user:alice",
+        "relation": "owner",
+        "object": "document:budget-2026"
+      },
+      {
+        "user": "user:david",
+        "relation": "viewer",
+        "object": "document:budget-2026"
+      }
+    ]
+  }
+}

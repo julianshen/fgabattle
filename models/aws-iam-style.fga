@@ -1,0 +1,126 @@
+model
+  schema 1.1
+
+type user
+
+type group
+  relations
+    define member: [user]
+
+type role
+  relations
+    # Users/services that can assume this role
+    define assumable_by: [user, role]
+    # Policies attached to this role
+    define has_policy: [policy]
+
+    # Computed: who can act as this role
+    define actor: assumable_by or member from has_policy
+
+type policy
+  relations
+    # Policies can be attached to users, groups, or roles
+    define attached_to_user: [user]
+    define attached_to_group: [group]
+    define attached_to_role: [role]
+
+    # Policy grants permissions
+    define grants_permission: [permission]
+
+    # Members affected by this policy
+    define member: attached_to_user or member from attached_to_group
+
+type account
+  relations
+    define admin: [user, role, group#member]
+    define member: [user, role, group#member]
+
+type permission
+  relations
+    # Permission is for a specific action on a resource
+    define action: [action]
+    define resource: [s3_bucket, ec2_instance, dynamodb_table, lambda_function]
+
+type action
+  relations
+    # Action belongs to a service
+    define service: [service]
+
+type service
+  relations
+    # Service-level permissions
+    define admin: [user, role, group#member]
+
+# AWS Resource Types
+type s3_bucket
+  relations
+    define account: [account]
+    define owner: [user, role]
+
+    # Resource-based policy (bucket policy)
+    define resource_policy_allows: [user, role, group#member]
+
+    # Identity-based permissions (from IAM policies)
+    define identity_based_read: [user, role, group#member]
+    define identity_based_write: [user, role, group#member]
+    define identity_based_delete: [user, role, group#member]
+
+    # Account-level access
+    define account_admin: admin from account
+
+    # Final permissions (combination of identity and resource policies)
+    define can_read: identity_based_read or resource_policy_allows or account_admin or owner
+    define can_write: identity_based_write or resource_policy_allows or account_admin or owner
+    define can_delete: identity_based_delete or account_admin or owner
+    define can_get_policy: account_admin or owner
+    define can_put_policy: account_admin or owner
+
+type ec2_instance
+  relations
+    define account: [account]
+    define owner: [user, role]
+
+    define identity_based_start: [user, role, group#member]
+    define identity_based_stop: [user, role, group#member]
+    define identity_based_terminate: [user, role, group#member]
+    define identity_based_describe: [user, role, group#member]
+
+    define account_admin: admin from account
+
+    define can_start: identity_based_start or account_admin or owner
+    define can_stop: identity_based_stop or account_admin or owner
+    define can_terminate: identity_based_terminate or account_admin or owner
+    define can_describe: identity_based_describe or account_admin or owner
+
+type dynamodb_table
+  relations
+    define account: [account]
+    define owner: [user, role]
+
+    define identity_based_read: [user, role, group#member]
+    define identity_based_write: [user, role, group#member]
+    define identity_based_admin: [user, role, group#member]
+
+    define account_admin: admin from account
+
+    define can_read: identity_based_read or account_admin or owner
+    define can_write: identity_based_write or account_admin or owner
+    define can_admin: identity_based_admin or account_admin or owner
+
+type lambda_function
+  relations
+    define account: [account]
+    define owner: [user, role]
+
+    define identity_based_invoke: [user, role, group#member]
+    define identity_based_update: [user, role, group#member]
+    define identity_based_delete: [user, role, group#member]
+
+    # Lambda execution role
+    define execution_role: [role]
+
+    define account_admin: admin from account
+
+    define can_invoke: identity_based_invoke or account_admin or owner
+    define can_update: identity_based_update or account_admin or owner
+    define can_delete: identity_based_delete or account_admin or owner

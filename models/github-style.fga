@@ -1,0 +1,49 @@
+model
+  schema 1.1
+
+type user
+
+type organization
+  relations
+    define owner: [user]
+    define member: [user]
+
+type repository
+  relations
+    define owner: [user, organization]
+    define admin: [user, organization#member]
+    define maintainer: [user, organization#member]
+    define writer: [user, organization#member]
+    define reader: [user, organization#member]
+
+    define can_read: reader or writer or maintainer or admin or owner
+    define can_write: writer or maintainer or admin or owner
+    define can_push: writer or maintainer or admin or owner
+    define can_admin: admin or owner
+    define can_delete: owner
+
+type issue
+  relations
+    define parent_repo: [repository]
+    define author: [user]
+
+    define repo_reader: can_read from parent_repo
+    define repo_writer: can_write from parent_repo
+
+    define can_view: repo_reader or author
+    define can_comment: repo_reader or author
+    define can_edit: repo_writer or author
+    define can_close: repo_writer or author
+
+type pull_request
+  relations
+    define parent_repo: [repository]
+    define author: [user]
+
+    define repo_reader: can_read from parent_repo
+    define repo_writer: can_write from parent_repo
+
+    define can_view: repo_reader or author
+    define can_comment: repo_reader or author
+    define can_approve: repo_writer
+    define can_merge: repo_writer

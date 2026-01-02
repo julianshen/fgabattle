@@ -1,0 +1,29 @@
+model
+  schema 1.1
+
+type user
+
+type org
+  relations
+    define member: [user, org#member]
+
+type space
+  relations
+    # Fix: Move 'with external_condition' inside the brackets for each type
+    define viewer: [user with external_condition, org#member with external_condition]
+    define editor: [user with external_condition, org#member with external_condition]
+    define admin: [user with external_condition, org#member with external_condition]
+
+    define can_view: viewer or editor or admin
+    define can_edit: editor or admin
+    define can_admin: admin
+
+type page
+  relations
+    define parent: [page, space]
+    define can_view: can_view from parent
+    define can_edit: can_edit from parent
+
+condition external_condition(external: bool, allow_external: bool) {
+  !external || allow_external
+}

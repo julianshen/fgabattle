@@ -1,0 +1,46 @@
+{
+  "writes": {
+    "tuple_keys": [
+      {
+        "user": "user:alice",
+        "relation": "member",
+        "object": "org:acme"
+      },
+      {
+        "user": "user:bob",
+        "relation": "member",
+        "object": "org:acme"
+      },
+      {
+        "user": "org:acme#member",
+        "relation": "admin",
+        "object": "space:engineering"
+      },
+      {
+        "user": "user:charlie",
+        "relation": "editor",
+        "object": "space:engineering"
+      },
+      {
+        "user": "user:david",
+        "relation": "viewer",
+        "object": "space:engineering"
+      },
+      {
+        "user": "space:engineering",
+        "relation": "parent",
+        "object": "page:architecture-doc"
+      },
+      {
+        "user": "space:engineering",
+        "relation": "parent",
+        "object": "page:api-spec"
+      },
+      {
+        "user": "page:architecture-doc",
+        "relation": "parent",
+        "object": "page:sub-section-1"
+      }
+    ]
+  }
+}

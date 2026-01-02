@@ -1,0 +1,30 @@
+model
+  schema 1.1
+
+type user
+
+type organization
+  relations
+    define owner: [user]
+    define admin: [user] or owner
+    define member: [user] or admin
+
+type team
+  relations
+    define parent_org: [organization]
+    define lead: [user]
+    define member: [user] or lead
+
+    define org_member: member from parent_org
+    define can_manage: lead or org_member
+
+type project
+  relations
+    define parent_team: [team]
+    define owner: [user]
+    define contributor: [user, team#member]
+
+    define team_lead: lead from parent_team
+    define can_read: contributor or team_lead or owner
+    define can_write: contributor or team_lead or owner
+    define can_delete: owner or team_lead

@@ -1,0 +1,61 @@
+{
+  "writes": {
+    "tuple_keys": [
+      {
+        "user": "user:alice",
+        "relation": "owner",
+        "object": "organization:opensource-org"
+      },
+      {
+        "user": "user:bob",
+        "relation": "member",
+        "object": "organization:opensource-org"
+      },
+      {
+        "user": "user:charlie",
+        "relation": "member",
+        "object": "organization:opensource-org"
+      },
+      {
+        "user": "organization:opensource-org",
+        "relation": "owner",
+        "object": "repository:awesome-project"
+      },
+      {
+        "user": "organization:opensource-org#member",
+        "relation": "maintainer",
+        "object": "repository:awesome-project"
+      },
+      {
+        "user": "user:david",
+        "relation": "writer",
+        "object": "repository:awesome-project"
+      },
+      {
+        "user": "user:eve",
+        "relation": "reader",
+        "object": "repository:awesome-project"
+      },
+      {
+        "user": "repository:awesome-project",
+        "relation": "parent_repo",
+        "object": "issue:bug-123"
+      },
+      {
+        "user": "user:frank",
+        "relation": "author",
+        "object": "issue:bug-123"
+      },
+      {
+        "user": "repository:awesome-project",
+        "relation": "parent_repo",
+        "object": "pull_request:pr-456"
+      },
+      {
+        "user": "user:david",
+        "relation": "author",
+        "object": "pull_request:pr-456"
+      }
+    ]
+  }
+}

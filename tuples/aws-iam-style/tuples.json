@@ -1,0 +1,161 @@
+{
+  "writes": {
+    "tuple_keys": [
+      {
+        "user": "user:alice",
+        "relation": "admin",
+        "object": "account:prod-account"
+      },
+      {
+        "user": "user:bob",
+        "relation": "member",
+        "object": "account:prod-account"
+      },
+      {
+        "user": "user:charlie",
+        "relation": "member",
+        "object": "group:developers"
+      },
+      {
+        "user": "user:david",
+        "relation": "member",
+        "object": "group:developers"
+      },
+      {
+        "user": "user:eve",
+        "relation": "member",
+        "object": "group:data-scientists"
+      },
+      {
+        "user": "group:developers",
+        "relation": "member",
+        "object": "account:prod-account"
+      },
+      {
+        "user": "user:bob",
+        "relation": "assumable_by",
+        "object": "role:ec2-admin-role"
+      },
+      {
+        "user": "group:developers#member",
+        "relation": "assumable_by",
+        "object": "role:lambda-deployer-role"
+      },
+      {
+        "user": "role:lambda-execution-role",
+        "relation": "assumable_by",
+        "object": "role:s3-read-role"
+      },
+      {
+        "user": "account:prod-account",
+        "relation": "account",
+        "object": "s3_bucket:app-data-bucket"
+      },
+      {
+        "user": "user:alice",
+        "relation": "owner",
+        "object": "s3_bucket:app-data-bucket"
+      },
+      {
+        "user": "group:developers#member",
+        "relation": "identity_based_read",
+        "object": "s3_bucket:app-data-bucket"
+      },
+      {
+        "user": "user:bob",
+        "relation": "identity_based_write",
+        "object": "s3_bucket:app-data-bucket"
+      },
+      {
+        "user": "role:s3-read-role",
+        "relation": "resource_policy_allows",
+        "object": "s3_bucket:app-data-bucket"
+      },
+      {
+        "user": "account:prod-account",
+        "relation": "account",
+        "object": "s3_bucket:public-assets"
+      },
+      {
+        "user": "user:alice",
+        "relation": "owner",
+        "object": "s3_bucket:public-assets"
+      },
+      {
+        "user": "account:prod-account",
+        "relation": "account",
+        "object": "ec2_instance:web-server-01"
+      },
+      {
+        "user": "user:bob",
+        "relation": "owner",
+        "object": "ec2_instance:web-server-01"
+      },
+      {
+        "user": "role:ec2-admin-role",
+        "relation": "identity_based_start",
+        "object": "ec2_instance:web-server-01"
+      },
+      {
+        "user": "role:ec2-admin-role",
+        "relation": "identity_based_stop",
+        "object": "ec2_instance:web-server-01"
+      },
+      {
+        "user": "role:ec2-admin-role",
+        "relation": "identity_based_terminate",
+        "object": "ec2_instance:web-server-01"
+      },
+      {
+        "user": "group:developers#member",
+        "relation": "identity_based_describe",
+        "object": "ec2_instance:web-server-01"
+      },
+      {
+        "user": "account:prod-account",
+        "relation": "account",
+        "object": "dynamodb_table:users-table"
+      },
+      {
+        "user": "user:alice",
+        "relation": "owner",
+        "object": "dynamodb_table:users-table"
+      },
+      {
+        "user": "group:developers#member",
+        "relation": "identity_based_read",
+        "object": "dynamodb_table:users-table"
+      },
+      {
+        "user": "role:lambda-execution-role",
+        "relation": "identity_based_write",
+        "object": "dynamodb_table:users-table"
+      },
+      {
+        "user": "account:prod-account",
+        "relation": "account",
+        "object": "lambda_function:api-handler"
+      },
+      {
+        "user": "user:alice",
+        "relation": "owner",
+        "object": "lambda_function:api-handler"
+      },
+      {
+        "user": "role:lambda-execution-role",
+        "relation": "execution_role",
+        "object": "lambda_function:api-handler"
+      },
+      {
+        "user": "group:developers#member",
+        "relation": "identity_based_invoke",
+        "object": "lambda_function:api-handler"
+      },
+      {
+        "user": "role:lambda-deployer-role",
+        "relation": "identity_based_update",
+        "object": "lambda_function:api-handler"
+      }
+    ]
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "writes": {
+    "tuple_keys": [
+      {
+        "user": "user:alice",
+        "relation": "owner",
+        "object": "folder:root"
+      },
+      {
+        "user": "user:bob",
+        "relation": "editor",
+        "object": "folder:root"
+      },
+      {
+        "user": "user:charlie",
+        "relation": "viewer",
+        "object": "folder:root"
+      },
+      {
+        "user": "folder:root",
+        "relation": "parent",
+        "object": "folder:projects"
+      },
+      {
+        "user": "user:david",
+        "relation": "editor",
+        "object": "folder:projects"
+      },
+      {
+        "user": "folder:projects",
+        "relation": "parent",
+        "object": "folder:2026-planning"
+      },
+      {
+        "user": "user:eve",
+        "relation": "viewer",
+        "object": "folder:2026-planning"
+      },
+      {
+        "user": "folder:2026-planning",
+        "relation": "parent",
+        "object": "file:budget.xlsx"
+      },
+      {
+        "user": "user:frank",
+        "relation": "owner",
+        "object": "file:budget.xlsx"
+      },
+      {
+        "user": "folder:projects",
+        "relation": "parent",
+        "object": "file:roadmap.md"
+      },
+      {
+        "user": "user:david",
+        "relation": "editor",
+        "object": "file:roadmap.md"
+      }
+    ]
+  }
+}

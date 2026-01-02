@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FGABattle - Simple Playground</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #e0e0e0;
+        }
+        h1 { color: #4a9eff; }
+        h2 { color: #6ab7ff; margin-top: 30px; }
+        .card {
+            background: #2a2a2a;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            border: 1px solid #3a3a3a;
+        }
+        .info { background: #1e3a5f; border-color: #2a4a7f; }
+        .model-viz {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: monospace;
+            overflow-x: auto;
+        }
+        .relation {
+            margin: 10px 0;
+            padding: 10px;
+            background: #333;
+            border-left: 3px solid #4a9eff;
+        }
+        input, select, button {
+            padding: 10px;
+            margin: 5px;
+            border-radius: 4px;
+            border: 1px solid #4a4a4a;
+            background: #333;
+            color: #e0e0e0;
+            font-size: 14px;
+        }
+        button {
+            background: #4a9eff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover { background: #3a8eef; }
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .allowed { background: #1e4d2b; border: 2px solid #2ea043; }
+        .denied { background: #4d1e1e; border: 2px solid #a02e2e; }
+        .tuple {
+            background: #2a2a2a;
+            padding: 8px;
+            margin: 5px 0;
+            border-left: 3px solid #6ab7ff;
+            font-family: monospace;
+        }
+        code {
+            background: #1a1a1a;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #ffb86c;
+        }
+    </style>
+</head>
+<body>
+    <h1>🛝 FGABattle - Simple Playground</h1>
+
+    <div class="card info">
+        <h2>Store Information</h2>
+        <p><strong>Store ID:</strong> <code id="storeId">01KDYC1WTMXYRGSKMZ311X3HPJ</code></p>
+        <p><strong>Model ID:</strong> <code id="modelId">01KDYC3MWZHYGT0NPQR0CPQ41H</code></p>
+        <p><strong>API Endpoint:</strong> <code>http://localhost:8080</code></p>
+    </div>
+
+    <div class="card">
+        <h2>Authorization Model</h2>
+        <div class="model-viz">
+            <h3 style="color: #4a9eff;">type: user</h3>
+
+            <h3 style="color: #4a9eff; margin-top: 20px;">type: document</h3>
+            <div class="relation">
+                <strong>owner:</strong> [user]
+            </div>
+            <div class="relation">
+                <strong>editor:</strong> [user] or owner<br>
+                <em style="color: #888;">→ Editors include direct editors + all owners</em>
+            </div>
+            <div class="relation">
+                <strong>viewer:</strong> [user] or editor<br>
+                <em style="color: #888;">→ Viewers include direct viewers + all editors (which includes owners)</em>
+            </div>
+            <div class="relation">
+                <strong>can_read:</strong> viewer<br>
+                <em style="color: #888;">→ Computed from viewer relation</em>
+            </div>
+            <div class="relation">
+                <strong>can_write:</strong> editor<br>
+                <em style="color: #888;">→ Computed from editor relation</em>
+            </div>
+            <div class="relation">
+                <strong>can_delete:</strong> owner<br>
+                <em style="color: #888;">→ Computed from owner relation</em>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Current Tuples (Relationships)</h2>
+        <div class="tuple">user:alice → owner → document:planning-doc</div>
+        <div class="tuple">user:bob → editor → document:planning-doc</div>
+        <div class="tuple">user:charlie → viewer → document:planning-doc</div>
+        <div class="tuple">user:alice → owner → document:budget-2026</div>
+        <div class="tuple">user:david → viewer → document:budget-2026</div>
+    </div>
+
+    <div class="card">
+        <h2>Check Authorization</h2>
+        <div>
+            <select id="userSelect">
+                <option value="user:alice">alice</option>
+                <option value="user:bob">bob</option>
+                <option value="user:charlie">charlie</option>
+                <option value="user:david">david</option>
+            </select>
+
+            <select id="relationSelect">
+                <option value="can_read">can read</option>
+                <option value="can_write">can write</option>
+                <option value="can_delete">can delete</option>
+            </select>
+
+            <select id="objectSelect">
+                <option value="document:planning-doc">planning-doc</option>
+                <option value="document:budget-2026">budget-2026</option>
+            </select>
+
+            <button onclick="checkAuth()">Check</button>
+        </div>
+        <div id="result"></div>
+    </div>
+
+    <div class="card">
+        <h2>List Objects</h2>
+        <div>
+            <select id="listUser">
+                <option value="user:alice">alice</option>
+                <option value="user:bob">bob</option>
+                <option value="user:charlie">charlie</option>
+                <option value="user:david">david</option>
+            </select>
+
+            <select id="listRelation">
+                <option value="can_read">can read</option>
+                <option value="can_write">can write</option>
+                <option value="can_delete">can delete</option>
+            </select>
+
+            <button onclick="listObjects()">List Objects</button>
+        </div>
+        <div id="listResult"></div>
+    </script>
+
+    <script>
+        const STORE_ID = '01KDYC1WTMXYRGSKMZ311X3HPJ';
+        const MODEL_ID = '01KDYC3MWZHYGT0NPQR0CPQ41H';
+        const API_BASE = 'http://localhost:8080';
+
+        function createTextNode(text) {
+            return document.createTextNode(text);
+        }
+
+        function clearElement(el) {
+            while (el.firstChild) {
+                el.removeChild(el.firstChild);
+            }
+        }
+
+        async function checkAuth() {
+            const user = document.getElementById('userSelect').value;
+            const relation = document.getElementById('relationSelect').value;
+            const object = document.getElementById('objectSelect').value;
+
+            const resultDiv = document.getElementById('result');
+            clearElement(resultDiv);
+            resultDiv.className = 'result';
+
+            const loading = document.createElement('em');
+            loading.textContent = 'Checking...';
+            resultDiv.appendChild(loading);
+
+            try {
+                const response = await fetch(`${API_BASE}/stores/${STORE_ID}/check`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        tuple_key: { user, relation, object },
+                        authorization_model_id: MODEL_ID
+                    })
+                });
+
+                const data = await response.json();
+                clearElement(resultDiv);
+
+                const status = document.createElement('strong');
+                const br1 = document.createElement('br');
+                const userCode = document.createElement('code');
+                const relationEm = document.createElement('em');
+                const objectCode = document.createElement('code');
+
+                if (data.allowed) {
+                    resultDiv.className = 'result allowed';
+                    status.textContent = '✅ ALLOWED';
+                    resultDiv.appendChild(status);
+                    resultDiv.appendChild(br1);
+
+                    userCode.textContent = user;
+                    resultDiv.appendChild(userCode);
+                    resultDiv.appendChild(createTextNode(' '));
+
+                    relationEm.textContent = relation;
+                    resultDiv.appendChild(relationEm);
+                    resultDiv.appendChild(createTextNode(' '));
+
+                    objectCode.textContent = object;
+                    resultDiv.appendChild(objectCode);
+                } else {
+                    resultDiv.className = 'result denied';
+                    status.textContent = '❌ DENIED';
+                    resultDiv.appendChild(status);
+                    resultDiv.appendChild(br1);
+
+                    userCode.textContent = user;
+                    resultDiv.appendChild(userCode);
+                    resultDiv.appendChild(createTextNode(' cannot '));
+
+                    relationEm.textContent = relation;
+                    resultDiv.appendChild(relationEm);
+                    resultDiv.appendChild(createTextNode(' '));
+
+                    objectCode.textContent = object;
+                    resultDiv.appendChild(objectCode);
+                }
+            } catch (error) {
+                clearElement(resultDiv);
+                resultDiv.className = 'result denied';
+                const errorText = document.createElement('strong');
+                errorText.textContent = '❌ Error: ' + error.message;
+                resultDiv.appendChild(errorText);
+            }
+        }
+
+        async function listObjects() {
+            const user = document.getElementById('listUser').value;
+            const relation = document.getElementById('listRelation').value;
+
+            const resultDiv = document.getElementById('listResult');
+            clearElement(resultDiv);
+            resultDiv.className = 'result';
+
+            const loading = document.createElement('em');
+            loading.textContent = 'Loading...';
+            resultDiv.appendChild(loading);
+
+            try {
+                const response = await fetch(`${API_BASE}/stores/${STORE_ID}/list-objects`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        authorization_model_id: MODEL_ID,
+                        type: 'document',
+                        relation,
+                        user
+                    })
+                });
+
+                const data = await response.json();
+                clearElement(resultDiv);
+
+                if (data.objects && data.objects.length > 0) {
+                    resultDiv.className = 'result allowed';
+
+                    const header = document.createElement('strong');
+                    header.textContent = `✅ ${data.objects.length} object(s)`;
+                    resultDiv.appendChild(header);
+                    resultDiv.appendChild(document.createElement('br'));
+
+                    data.objects.forEach(obj => {
+                        const tupleDiv = document.createElement('div');
+                        tupleDiv.className = 'tuple';
+                        tupleDiv.textContent = obj;
+                        resultDiv.appendChild(tupleDiv);
+                    });
+                } else {
+                    resultDiv.className = 'result denied';
+                    resultDiv.textContent = 'No objects found';
+                }
+            } catch (error) {
+                clearElement(resultDiv);
+                resultDiv.className = 'result denied';
+                resultDiv.textContent = '❌ Error: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>

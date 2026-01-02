@@ -1,0 +1,51 @@
+{
+  "writes": {
+    "tuple_keys": [
+      {
+        "user": "user:alice",
+        "relation": "owner",
+        "object": "organization:techcorp"
+      },
+      {
+        "user": "user:bob",
+        "relation": "admin",
+        "object": "organization:techcorp"
+      },
+      {
+        "user": "user:charlie",
+        "relation": "member",
+        "object": "organization:techcorp"
+      },
+      {
+        "user": "organization:techcorp",
+        "relation": "parent_org",
+        "object": "team:backend"
+      },
+      {
+        "user": "user:david",
+        "relation": "lead",
+        "object": "team:backend"
+      },
+      {
+        "user": "user:eve",
+        "relation": "member",
+        "object": "team:backend"
+      },
+      {
+        "user": "team:backend",
+        "relation": "parent_team",
+        "object": "project:api-service"
+      },
+      {
+        "user": "user:frank",
+        "relation": "owner",
+        "object": "project:api-service"
+      },
+      {
+        "user": "team:backend#member",
+        "relation": "contributor",
+        "object": "project:api-service"
+      }
+    ]
+  }
+}

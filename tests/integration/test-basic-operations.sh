@@ -219,6 +219,7 @@ RESPONSE=$(curl -s -X POST "$API_BASE/stores/$STORE_ID/batch-check" \
   -d "{
     \"checks\": [
       {
+        \"correlation_id\": \"check-1\",
         \"tuple_key\": {
           \"user\": \"$TEST_USER\",
           \"relation\": \"can_read\",
@@ -227,6 +228,7 @@ RESPONSE=$(curl -s -X POST "$API_BASE/stores/$STORE_ID/batch-check" \
         \"authorization_model_id\": \"$MODEL_ID\"
       },
       {
+        \"correlation_id\": \"check-2\",
         \"tuple_key\": {
           \"user\": \"$TEST_USER\",
           \"relation\": \"can_write\",
@@ -237,7 +239,7 @@ RESPONSE=$(curl -s -X POST "$API_BASE/stores/$STORE_ID/batch-check" \
     ]
   }")
 
-if echo "$RESPONSE" | jq -e '.result | length == 2' > /dev/null 2>&1; then
+if echo "$RESPONSE" | jq -e '.result | keys | length == 2' > /dev/null 2>&1; then
     RESULT=$(echo "$RESPONSE" | jq -c '.result')
     log_success "Batch check returned 2 results: $RESULT"
 else

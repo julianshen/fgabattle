@@ -78,6 +78,7 @@ export default function (data) {
     const testCase = getRandomItem(testCases);
 
     checks.push({
+      correlation_id: `check-${i}`,
       tuple_key: {
         user: user,
         relation: testCase.relation,
@@ -119,7 +120,7 @@ export default function (data) {
     'response has results': (r) => {
       try {
         const body = JSON.parse(r.body);
-        return Array.isArray(body.result) && body.result.length === batchSize;
+        return body.result && typeof body.result === 'object' && Object.keys(body.result).length === batchSize;
       } catch (e) {
         return false;
       }
@@ -127,7 +128,7 @@ export default function (data) {
     'all checks completed': (r) => {
       try {
         const body = JSON.parse(r.body);
-        return body.result.every(result => result.hasOwnProperty('allowed'));
+        return Object.values(body.result).every(result => result.hasOwnProperty('allowed'));
       } catch (e) {
         return false;
       }

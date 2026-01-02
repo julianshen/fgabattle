@@ -1,0 +1,834 @@
+{
+  "schema_version": "1.1",
+  "type_definitions": [
+    {
+      "type": "user"
+    },
+    {
+      "type": "group",
+      "relations": {
+        "member": {
+          "this": {}
+        }
+      },
+      "metadata": {
+        "relations": {
+          "member": {
+            "directly_related_user_types": [
+              {"type": "user"}
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "role",
+      "relations": {
+        "assumable_by": {
+          "this": {}
+        },
+        "has_policy": {
+          "this": {}
+        },
+        "actor": {
+          "union": {
+            "child": [
+              {
+                "computedUserset": {
+                  "relation": "assumable_by"
+                }
+              },
+              {
+                "tupleToUserset": {
+                  "tupleset": {
+                    "relation": "has_policy"
+                  },
+                  "computedUserset": {
+                    "relation": "member"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "metadata": {
+        "relations": {
+          "assumable_by": {
+            "directly_related_user_types": [
+              {"type": "user"},
+              {"type": "role"}
+            ]
+          },
+          "has_policy": {
+            "directly_related_user_types": [
+              {"type": "policy"}
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "policy",
+      "relations": {
+        "attached_to_user": {
+          "this": {}
+        },
+        "attached_to_group": {
+          "this": {}
+        },
+        "attached_to_role": {
+          "this": {}
+        },
+        "grants_permission": {
+          "this": {}
+        },
+        "member": {
+          "union": {
+            "child": [
+              {
+                "computedUserset": {
+                  "relation": "attached_to_user"
+                }
+              },
+              {
+                "tupleToUserset": {
+                  "tupleset": {
+                    "relation": "attached_to_group"
+                  },
+                  "computedUserset": {
+                    "relation": "member"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "metadata": {
+        "relations": {
+          "attached_to_user": {
+            "directly_related_user_types": [
+              {"type": "user"}
+            ]
+          },
+          "attached_to_group": {
+            "directly_related_user_types": [
+              {"type": "group"}
+            ]
+          },
+          "attached_to_role": {
+            "directly_related_user_types": [
+              {"type": "role"}
+            ]
+          },
+          "grants_permission": {
+            "directly_related_user_types": [
+              {"type": "permission"}
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "account",
+      "relations": {
+        "admin": {
+          "this": {}
+        },
+        "member": {
+          "this": {}
+        }
+      },
+      "metadata": {
+        "relations": {
+          "admin": {
+            "directly_related_user_types": [
+              {"type": "user"},
+              {"type": "role"},
+              {"type": "group", "relation": "member"}
+            ]
+          },
+          "member": {
+            "directly_related_user_types": [
+              {"type": "user"},
+              {"type": "role"},
+              {"type": "group", "relation": "member"}
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "permission",
+      "relations": {
+        "action": {
+          "this": {}
+        },
+        "resource": {
+          "this": {}
+        }
+      },
+      "metadata": {
+        "relations": {
+          "action": {
+            "directly_related_user_types": [
+              {"type": "action"}
+            ]
+          },
+          "resource": {
+            "directly_related_user_types": [
+              {"type": "s3_bucket"},
+              {"type": "ec2_instance"},
+              {"type": "dynamodb_table"},
+              {"type": "lambda_function"}
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "action",
+      "relations": {
+        "service": {
+          "this": {}
+        }
+      },
+      "metadata": {
+        "relations": {
+          "service": {
+            "directly_related_user_types": [
+              {"type": "service"}
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "service",
+      "relations": {
+        "admin": {
+          "this": {}
+        }
+      },
+      "metadata": {
+        "relations": {
+          "admin": {
+            "directly_related_user_types": [
+              {"type": "user"},
+              {"type": "role"},
+              {"type": "group", "relation": "member"}
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "s3_bucket",
+      "relations": {
+        "account": {
+          "this": {}
+        },
+        "owner": {
+          "this": {}
+        },
+        "resource_policy_allows": {
+          "this": {}
+        },
+        "identity_based_read": {
+          "this": {}
+        },
+        "identity_based_write": {
+          "this": {}
+        },
+        "identity_based_delete": {
+          "this": {}
+        },
+        "account_admin": {
+          "tupleToUserset": {
+            "tupleset": {
+              "relation": "account"
+            },
+            "computedUserset": {
+              "relation": "admin"
+            }
+          }
+        },
+        "can_read": {
+          "union": {
+            "child": [
+              {
+                "computedUserset": {
+                  "relation": "identity_based_read"
+                }
+              },
+              {
+                "computedUserset": {
+                  "relation": "resource_policy_allows"
+                }
+              },
+              {
+                "computedUserset": {
+                  "relation": "account_admin"
+                }
+              },
+              {
+                "computedUserset": {
+                  "relation": "owner"
+                }
+              }
+            ]
+          }
+        },
+        "can_write": {
+          "union": {
+            "child": [
+              {
+                "computedUserset": {
+                  "relation": "identity_based_write"
+                }
+              },
+              {
+                "computedUserset": {
+                  "relation": "resource_policy_allows"
+                }
+              },
+              {
+                "computedUserset": {
+                  "relation": "account_admin"
+                }
+              },
+              {
+                "computedUserset": {
+                  "relation": "owner"
+                }
+              }
+            ]
+          }
+        },
+        "can_delete": {
+          "union": {
+            "child": [
+              {
+                "computedUserset": {
+                  "relation": "identity_based_delete"
+                }
+              },
+              {
+                "computedUserset": {
+                  "relation": "account_admin"
+                }
+              },
+              {
+                "computedUserset": {
+                  "relation": "owner"
+                }
+              }
+            ]
+          }
+        },
+        "can_get_policy": {
+          "union": {
+            "child": [
+              {
+                "computedUserset": {
+                  "relation": "account_admin"
+                }
+              },
+              {
+                "computedUserset": {
+                  "relation": "owner"
+                }
+              }
+            ]
+          }
+        },
+        "can_put_policy": {
+          "union": {
+            "child": [
+              {
+                "computedUserset": {
+                  "relation": "account_admin"
+                }
+              },
+              {
+                "computedUserset": {
+                  "relation": "owner"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "metadata": {
+        "relations": {
+          "account": {
+            "directly_related_user_types": [
+              {"type": "account"}
+            ]
+          },
+          "owner": {
+            "directly_related_user_types": [
+              {"type": "user"},
+              {"type": "role"}
+            ]
+          },
+          "resource_policy_allows": {
+            "directly_related_user_types": [
+              {"type": "user"},
+              {"type": "role"},
+              {"type": "group", "relation": "member"}
+            ]
+          },
+          "identity_based_read": {
+            "directly_related_user_types": [
+              {"type": "user"},
+              {"type": "role"},
+              {"type": "group", "relation": "member"}
+            ]
+          },
+          "identity_based_write": {
+            "directly_related_user_types": [
+              {"type": "user"},
+              {"type": "role"},
+              {"type": "group", "relation": "member"}
+            ]
+          },
+          "identity_based_delete": {
+            "directly_related_user_types": [
+              {"type": "user"},
+              {"type": "role"},
+              {"type": "group", "relation": "member"}
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "ec2_instance",
+      "relations": {
+        "account": {
+          "this": {}
+        },
+        "owner": {
+          "this": {}
+        },
+        "identity_based_start": {
+          "this": {}
+        },
+        "identity_based_stop": {
+          "this": {}
+        },
+        "identity_based_terminate": {
+          "this": {}
+        },
+        "identity_based_describe": {
+          "this": {}
+        },
+        "account_admin": {
+          "tupleToUserset": {
+            "tupleset": {
+              "relation": "account"
+            },
+            "computedUserset": {
+              "relation": "admin"
+            }
+          }
+        },
+        "can_start": {
+          "union": {
+            "child": [
+              {
+                "computedUserset": {
+                  "relation": "identity_based_start"
+                }
+              },
+              {
+                "computedUserset": {
+                  "relation": "account_admin"
+                }
+              },
+              {
+                "computedUserset": {
+                  "relation": "owner"
+                }
+              }
+            ]
+          }
+        },
+        "can_stop": {
+          "union": {
+            "child": [
+              {
+                "computedUserset": {
+                  "relation": "identity_based_stop"
+                }
+              },
+              {
+                "computedUserset": {
+                  "relation": "account_admin"
+                }
+              },
+              {
+                "computedUserset": {
+                  "relation": "owner"
+                }
+              }
+            ]
+          }
+        },
+        "can_terminate": {
+          "union": {
+            "child": [
+              {
+                "computedUserset": {
+                  "relation": "identity_based_terminate"
+                }
+              },
+              {
+                "computedUserset": {
+                  "relation": "account_admin"
+                }
+              },
+              {
+                "computedUserset": {
+                  "relation": "owner"
+                }
+              }
+            ]
+          }
+        },
+        "can_describe": {
+          "union": {
+            "child": [
+              {
+                "computedUserset": {
+                  "relation": "identity_based_describe"
+                }
+              },
+              {
+                "computedUserset": {
+                  "relation": "account_admin"
+                }
+              },
+              {
+                "computedUserset": {
+                  "relation": "owner"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "metadata": {
+        "relations": {
+          "account": {
+            "directly_related_user_types": [
+              {"type": "account"}
+            ]
+          },
+          "owner": {
+            "directly_related_user_types": [
+              {"type": "user"},
+              {"type": "role"}
+            ]
+          },
+          "identity_based_start": {
+            "directly_related_user_types": [
+              {"type": "user"},
+              {"type": "role"},
+              {"type": "group", "relation": "member"}
+            ]
+          },
+          "identity_based_stop": {
+            "directly_related_user_types": [
+              {"type": "user"},
+              {"type": "role"},
+              {"type": "group", "relation": "member"}
+            ]
+          },
+          "identity_based_terminate": {
+            "directly_related_user_types": [
+              {"type": "user"},
+              {"type": "role"},
+              {"type": "group", "relation": "member"}
+            ]
+          },
+          "identity_based_describe": {
+            "directly_related_user_types": [
+              {"type": "user"},
+              {"type": "role"},
+              {"type": "group", "relation": "member"}
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "dynamodb_table",
+      "relations": {
+        "account": {
+          "this": {}
+        },
+        "owner": {
+          "this": {}
+        },
+        "identity_based_read": {
+          "this": {}
+        },
+        "identity_based_write": {
+          "this": {}
+        },
+        "identity_based_admin": {
+          "this": {}
+        },
+        "account_admin": {
+          "tupleToUserset": {
+            "tupleset": {
+              "relation": "account"
+            },
+            "computedUserset": {
+              "relation": "admin"
+            }
+          }
+        },
+        "can_read": {
+          "union": {
+            "child": [
+              {
+                "computedUserset": {
+                  "relation": "identity_based_read"
+                }
+              },
+              {
+                "computedUserset": {
+                  "relation": "account_admin"
+                }
+              },
+              {
+                "computedUserset": {
+                  "relation": "owner"
+                }
+              }
+            ]
+          }
+        },
+        "can_write": {
+          "union": {
+            "child": [
+              {
+                "computedUserset": {
+                  "relation": "identity_based_write"
+                }
+              },
+              {
+                "computedUserset": {
+                  "relation": "account_admin"
+                }
+              },
+              {
+                "computedUserset": {
+                  "relation": "owner"
+                }
+              }
+            ]
+          }
+        },
+        "can_admin": {
+          "union": {
+            "child": [
+              {
+                "computedUserset": {
+                  "relation": "identity_based_admin"
+                }
+              },
+              {
+                "computedUserset": {
+                  "relation": "account_admin"
+                }
+              },
+              {
+                "computedUserset": {
+                  "relation": "owner"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "metadata": {
+        "relations": {
+          "account": {
+            "directly_related_user_types": [
+              {"type": "account"}
+            ]
+          },
+          "owner": {
+            "directly_related_user_types": [
+              {"type": "user"},
+              {"type": "role"}
+            ]
+          },
+          "identity_based_read": {
+            "directly_related_user_types": [
+              {"type": "user"},
+              {"type": "role"},
+              {"type": "group", "relation": "member"}
+            ]
+          },
+          "identity_based_write": {
+            "directly_related_user_types": [
+              {"type": "user"},
+              {"type": "role"},
+              {"type": "group", "relation": "member"}
+            ]
+          },
+          "identity_based_admin": {
+            "directly_related_user_types": [
+              {"type": "user"},
+              {"type": "role"},
+              {"type": "group", "relation": "member"}
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "lambda_function",
+      "relations": {
+        "account": {
+          "this": {}
+        },
+        "owner": {
+          "this": {}
+        },
+        "identity_based_invoke": {
+          "this": {}
+        },
+        "identity_based_update": {
+          "this": {}
+        },
+        "identity_based_delete": {
+          "this": {}
+        },
+        "execution_role": {
+          "this": {}
+        },
+        "account_admin": {
+          "tupleToUserset": {
+            "tupleset": {
+              "relation": "account"
+            },
+            "computedUserset": {
+              "relation": "admin"
+            }
+          }
+        },
+        "can_invoke": {
+          "union": {
+            "child": [
+              {
+                "computedUserset": {
+                  "relation": "identity_based_invoke"
+                }
+              },
+              {
+                "computedUserset": {
+                  "relation": "account_admin"
+                }
+              },
+              {
+                "computedUserset": {
+                  "relation": "owner"
+                }
+              }
+            ]
+          }
+        },
+        "can_update": {
+          "union": {
+            "child": [
+              {
+                "computedUserset": {
+                  "relation": "identity_based_update"
+                }
+              },
+              {
+                "computedUserset": {
+                  "relation": "account_admin"
+                }
+              },
+              {
+                "computedUserset": {
+                  "relation": "owner"
+                }
+              }
+            ]
+          }
+        },
+        "can_delete": {
+          "union": {
+            "child": [
+              {
+                "computedUserset": {
+                  "relation": "identity_based_delete"
+                }
+              },
+              {
+                "computedUserset": {
+                  "relation": "account_admin"
+                }
+              },
+              {
+                "computedUserset": {
+                  "relation": "owner"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "metadata": {
+        "relations": {
+          "account": {
+            "directly_related_user_types": [
+              {"type": "account"}
+            ]
+          },
+          "owner": {
+            "directly_related_user_types": [
+              {"type": "user"},
+              {"type": "role"}
+            ]
+          },
+          "identity_based_invoke": {
+            "directly_related_user_types": [
+              {"type": "user"},
+              {"type": "role"},
+              {"type": "group", "relation": "member"}
+            ]
+          },
+          "identity_based_update": {
+            "directly_related_user_types": [
+              {"type": "user"},
+              {"type": "role"},
+              {"type": "group", "relation": "member"}
+            ]
+          },
+          "identity_based_delete": {
+            "directly_related_user_types": [
+              {"type": "user"},
+              {"type": "role"},
+              {"type": "group", "relation": "member"}
+            ]
+          },
+          "execution_role": {
+            "directly_related_user_types": [
+              {"type": "role"}
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,10 +1,12 @@
-# Generated tuple files
-tuples/*/scale/*.json
-tuples/*/*.json
+# Generated tuple files (large scale datasets)
+tuples/*/scale/
+tuples/aws-iam-style/scale/*.json
+tuples/document-simple/scale/*.json
 
-# Keep example/template files
-!tuples/*/README.md
-!tuples/*/example-*.json
+# Generated test outputs
+test-results/
+*.test.json
+benchmark-results/
 
 # Python
 __pycache__/
@@ -27,8 +29,12 @@ venv/
 .DS_Store
 Thumbs.db
 
-# Test results
+# Test results and generated reports
 test-results-*.md
+test-results/
+reports/
+*.test.log
+k6-results/
 
 # Temporary files
 *.tmp
@@ -37,3 +43,13 @@ test-results-*.md
 # Local configuration
 *.local.md
 .env
+.env.local
+config.local.json
+
+# Node modules (if K6 scripts use npm)
+node_modules/
+package-lock.json
+
+# Generated documentation
+docs/_build/
+site/

@@ -11,7 +11,9 @@ We provide four different scale datasets for comprehensive performance testing:
 | **Mini** | ~348 | 49 KB | Quick testing, development, CI/CD |
 | **Mid** | ~15,665 | 2.2 MB | Integration testing, staging environments |
 | **Large** | ~533,320 | 74 MB | Production-like testing, performance baselines |
-| **Huge** | ~11,531,680 | 1.6 GB | Extreme load testing, capacity planning |
+| **Huge** | ~506,920 | 71 MB | Load testing, 500K+ tuple scale validation |
+
+> **Note**: All datasets are sized to fit within GitHub's file size limits. For extreme scale testing (1M+ tuples), regenerate locally using the generation script with custom parameters.
 
 ## Dataset Composition (AWS IAM Style)
 
@@ -47,15 +49,15 @@ Each dataset contains a realistic distribution of AWS IAM relationships:
 - 100 DynamoDB Tables per account
 - 100 Lambda Functions per account
 
-### Huge Scale (11,531,680 tuples)
-- 20 Accounts
-- 2,000 Users per account
-- 500 Groups per account
-- 1,000 Roles per account
-- 500 S3 Buckets per account
-- 300 EC2 Instances per account
-- 200 DynamoDB Tables per account
-- 200 Lambda Functions per account
+### Huge Scale (506,920 tuples)
+- 8 Accounts
+- 600 Users per account
+- 100 Groups per account
+- 200 Roles per account
+- 200 S3 Buckets per account
+- 150 EC2 Instances per account
+- 100 DynamoDB Tables per account
+- 100 Lambda Functions per account
 
 ## Generating Custom Datasets
 
@@ -139,8 +141,8 @@ while IFS= read -r batch; do
 done < /tmp/large-batches.jsonl
 ```
 
-#### Huge Scale (Use Import Tool)
-For the huge dataset (11M+ tuples), use the OpenFGA import tool or batch loading script:
+#### Huge Scale (Batch Loading)
+For the huge dataset (500K+ tuples), use batch loading for better performance:
 
 ```bash
 # Option 1: Use jq to split into 10K tuple batches
@@ -321,7 +323,29 @@ Expected performance characteristics with default PostgreSQL backend:
 | Mini | 348 | ~50 KB |
 | Mid | 15,665 | ~5 MB |
 | Large | 533,320 | ~150 MB |
-| Huge | 11,531,680 | ~3 GB |
+| Huge | 506,920 | ~140 MB |
+
+### Custom Extreme Scale Testing
+
+For testing beyond the included datasets (1M+ tuples), modify the generation script:
+
+```python
+# In scripts/generate-aws-iam-tuples.py, add custom scale:
+"extreme": {
+    "accounts": 20,
+    "users_per_account": 2000,
+    "groups_per_account": 500,
+    "roles_per_account": 1000,
+    # ... adjust as needed
+}
+```
+
+Then generate locally (will create multi-GB files):
+```bash
+python3 scripts/generate-aws-iam-tuples.py extreme
+```
+
+**Note**: Datasets over 100MB are not committed to Git to keep repository size manageable.
 
 ## Optimization Tips
 

@@ -48,14 +48,14 @@ def generate_tuples(scale: str) -> List[Dict]:
             "lambda_functions_per_account": 100,
         },
         "huge": {
-            "accounts": 20,
-            "users_per_account": 2000,
-            "groups_per_account": 500,
-            "roles_per_account": 1000,
-            "s3_buckets_per_account": 500,
-            "ec2_instances_per_account": 300,
-            "dynamodb_tables_per_account": 200,
-            "lambda_functions_per_account": 200,
+            "accounts": 8,
+            "users_per_account": 600,
+            "groups_per_account": 100,
+            "roles_per_account": 200,
+            "s3_buckets_per_account": 200,
+            "ec2_instances_per_account": 150,
+            "dynamodb_tables_per_account": 100,
+            "lambda_functions_per_account": 100,
         }
     }
 

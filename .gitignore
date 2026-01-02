@@ -1,0 +1,39 @@
+# Generated tuple files
+tuples/*/scale/*.json
+tuples/*/*.json
+
+# Keep example/template files
+!tuples/*/README.md
+!tuples/*/example-*.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+*.egg-info/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test results
+test-results-*.md
+
+# Temporary files
+*.tmp
+*.bak
+
+# Local configuration
+*.local.md
+.env
